@@ -21,7 +21,7 @@ Kapcsolodó, de nem fektetek rá hangsúlyt: AB teszt kiértékelése, mért ere
 
 To read:
 
-https://glasnostic.com/blog/how-canary-deployments-work-1-kubernetes-istio-linkerd
-https://glasnostic.com/blog/how-canary-deployments-work-2-developer-vs-operator-concerns
-https://istio.io/latest/blog/2017/0.1-canary/
-https://www.getambassador.io/docs/edge-stack/latest/topics/using/canary/
+- https://glasnostic.com/blog/how-canary-deployments-work-1-kubernetes-istio-linkerd
+- https://glasnostic.com/blog/how-canary-deployments-work-2-developer-vs-operator-concerns
+- https://istio.io/latest/blog/2017/0.1-canary/ -> complex selectors, even regex
+- https://www.getambassador.io/docs/edge-stack/latest/topics/using/canary/ -> wighted round robin
