@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("nameday")
+@RequestMapping("api/nameday")
 class NameDayController(
     @Autowired val repository: NameDayRepository
 ) {

@@ -23,7 +23,7 @@ services:
       - nevnap-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.be.rule=PathPrefix(`/`)
+      - traefik.http.routers.be.rule=PathPrefix(`/api/nameday`)
 
   fe:
     image: "canary_fe:dev"
@@ -31,7 +31,7 @@ services:
       - nevnap-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.web.rule=PathPrefix(`/`)
+      - traefik.http.routers.fe.rule=PathPrefix(`/fe`)
 
 #  mysql:
 #    image: mysql:8.0.22

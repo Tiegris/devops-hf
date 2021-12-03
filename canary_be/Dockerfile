@@ -6,4 +6,5 @@ RUN cd /build && \
 
 # Stage 2: FINAL
 FROM openjdk:11-jre-slim as final
-COPY --from=build /build/build/lib/*.jar /app/app.jar
+COPY --from=build /build/build/libs/*.jar /app/app.jar
+ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
