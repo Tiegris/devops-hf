@@ -21,7 +21,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter:2.5.6")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.5.6")
 	implementation("org.springframework.boot:spring-boot-starter-web:2.5.6")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.6")
+
 
 	implementation("org.springdoc:springdoc-openapi-ui:1.5.13")
 

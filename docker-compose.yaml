@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  apigateway:
+    image: traefik:v2.2.1
+    ports:
+      - 443:443
+      - 80:80
+      - 8080:8080
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nevnap-network
+
+  be:
+    image: "canary_be:dev"
+    networks:
+      - nevnap-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.be.rule=PathPrefix(`/`)
+
+  fe:
+    image: "canary_fe:dev"
+    networks:
+      - nevnap-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web.rule=PathPrefix(`/`)
+
+#  mysql:
+#    image: mysql:8.0.22
+#    command: --default-authentication-plugin=mysql_native_password
+#    environment:
+#      MYSQL_ROOT_PASSWORD: alma
+#    networks:
+#      - nevnap-network
+#    volumes:
+#      - meteor-sql-data:/var/lib/mysql
+
+
+networks:
+  nevnap-network:
+    driver: bridge
