@@ -1,32 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: be-v2
-  labels:
-    app: be
-    version: v2
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: be
-  template:
-    metadata:
-      labels:
-        app: be
-        version: v2
-    spec:
-      containers:
-        - name: be
-          image: canary_be:v2
-          ports:
-            - name: http
-              containerPort: 80
-      restartPolicy: Always
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: be-v1
   labels:
     app: be
@@ -50,3 +24,29 @@ spec:
               containerPort: 80
       restartPolicy: Always
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-v2
+  labels:
+    app: be
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+        version: v2
+    spec:
+      containers:
+        - name: be
+          image: canary_be:v2
+          ports:
+            - name: http
+              containerPort: 80
+      restartPolicy: Always
+

@@ -4,9 +4,14 @@ metadata:
   name: be
 spec:
   hosts:
-    - be
+    - "*"
+  gateways:
+    - gateway
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /api/nameday
+    route:
     - destination:
         host: be
         subset: v1
@@ -15,6 +20,7 @@ spec:
         host: be
         subset: v2
       weight: 10
+
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -22,35 +28,14 @@ metadata:
   name: fe
 spec:
   hosts:
-    - fe
+    - "*"
+  gateways:
+    - gateway
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /
+    route:
     - destination:
         host: fe
         subset: v1
-
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: fe
-spec:
-  host: fe
-  subsets:
-  - name: v1
-    labels:
-      version: v1
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: be
-spec:
-  host: be
-  subsets:
-  - name: v1
-    labels:
-      version: v1
-  - name: v2
-    labels:
-      version: v2
