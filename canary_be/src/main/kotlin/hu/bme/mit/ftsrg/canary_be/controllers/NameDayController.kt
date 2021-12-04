@@ -17,7 +17,7 @@ class NameDayController(
 ) {
     @GetMapping()
     fun read(): ResponseEntity<List<NameDayResponse>> {
-        val data = repository.findAll().map { NameDayResponse(it.id!!, it.date, it.name) }
+        val data = repository.findAll().map { NameDayResponse(it.id!!, it.date, it.name) }.sortedBy { it.date }
         return ResponseEntity.ok(data)
     }
 
