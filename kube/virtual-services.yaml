@@ -11,15 +11,24 @@ spec:
   - match:
     - uri:
         prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=true)(;.*)?$"
+    route:
+    - destination:
+        host: be
+        subset: v2
+
+  - match:
+    - uri:
+        prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=false)(;.*)?$"
     route:
     - destination:
         host: be
         subset: v1
-      weight: 90
-    - destination:
-        host: be
-        subset: v2
-      weight: 10
 
 ---
 apiVersion: networking.istio.io/v1alpha3
