@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("api/nameday")
@@ -38,8 +39,10 @@ class NameDayController(
     }
 
     @GetMapping("/next")
-    fun next(): ResponseEntity<Void> {
-        return ResponseEntity.status(501).build()
+    fun next(): ResponseEntity<NameDayResponse> {
+        val data = repository.getFirstByDateAfter(LocalDate.now())
+        val dto = data.let { NameDayResponse(it.id!!, it.date, it.name) }
+        return ResponseEntity.ok(dto)
     }
 
 }
