@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe
+  labels:
+    app: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe
+  template:
+    metadata:
+      labels:
+        app: fe
+        version: v1
+    spec:
+      containers:
+        - name: fe
+          image: canary_fe:v1
+          ports:
+            - name: http
+              containerPort: 80
+      restartPolicy: Always
+
+
