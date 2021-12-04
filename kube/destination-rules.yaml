@@ -16,9 +16,9 @@ metadata:
 spec:
   host: be
   subsets:
-  - name: v1
+  - name: stabile
     labels:
       version: v1
-  - name: v2
+  - name: canary
     labels:
       version: v2

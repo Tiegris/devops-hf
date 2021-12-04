@@ -17,7 +17,12 @@ spec:
     route:
     - destination:
         host: be
-        subset: v2
+        subset: canary
+      weight: 50
+    - destination:
+        host: be
+        subset: stabile
+      weight: 50
 
   - match:
     - uri:
@@ -28,7 +33,7 @@ spec:
     route:
     - destination:
         host: be
-        subset: v1
+        subset: stabile
 
 ---
 apiVersion: networking.istio.io/v1alpha3

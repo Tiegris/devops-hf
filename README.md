@@ -26,3 +26,8 @@ Kapcsolodó, de nem fektetek rá hangsúlyt: AB teszt kiértékelése, mért ere
 - https://www.getambassador.io/docs/edge-stack/latest/topics/using/canary/ -> weighted round robin
 - https://www.mirantis.com/blog/your-app-deserves-more-than-kubernetes-ingress-kubernetes-ingress-vs-istio-gateway-webinar/
 
+Apply all:
+
+```bash
+ka -f virtual-services.yaml -f ingress.yaml -f destination-rules.yaml -f deployments-be.yaml -f deployments-fe.yaml -f services.yaml
+```
