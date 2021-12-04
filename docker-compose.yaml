@@ -31,7 +31,7 @@ services:
       - nevnap-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.fe.rule=PathPrefix(`/fe`)
+      - traefik.http.routers.fe.rule=PathPrefix(`/`)
 
 #  mysql:
 #    image: mysql:8.0.22

@@ -13,7 +13,7 @@
         mdata = []
 
             function fetchList() {
-                fetch('nevnap')
+                fetch('/api/nameday')
                     .then(response => response.json())
                     .then(data => setData(data)).catch((error) => {
                         var list = document.getElementById("loading_sign");
@@ -76,7 +76,7 @@
                 console.log(jsonData)
 
                 $.ajax({
-                    url: 'http://localhost/api/nameday',
+                    url: '/api/nameday',
                     type: 'POST',
                     data: jsonData,
                     dataType: 'json',
@@ -93,7 +93,7 @@
 
             function deleteNN(id) {
                 $.ajax({
-                    url: 'http://localhost/api/nameday' + id,
+                    url: '/api/nameday/' + id,
                     type: 'DELETE',
                     success: function () {
                         fetchList()
