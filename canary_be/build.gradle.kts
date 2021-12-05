@@ -23,10 +23,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web:2.5.6")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.6")
 
-
 	implementation("org.springdoc:springdoc-openapi-ui:1.5.13")
 
-	implementation("org.hsqldb:hsqldb:2.6.1")
+	implementation("mysql:mysql-connector-java")
+
+	//implementation("org.hsqldb:hsqldb:2.6.1")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
