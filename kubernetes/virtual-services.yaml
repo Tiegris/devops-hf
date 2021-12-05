@@ -1,0 +1,55 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: be
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=true)(;.*)?$"
+    route:
+    - destination:
+        host: be
+        subset: canary
+      weight: 100
+    - destination:
+        host: be
+        subset: stabile
+      weight: 0
+
+  - match:
+    - uri:
+        prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=false)(;.*)?$"
+    route:
+    - destination:
+        host: be
+        subset: stabile
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: fe
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: fe
+        subset: v1
