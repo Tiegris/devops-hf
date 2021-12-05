@@ -1,0 +1,294 @@
+---
+# Source: canary_be/templates/database.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+# Source: canary_be/templates/database.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: canary_be/templates/database.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+# Source: canary_be/templates/services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe
+  labels:
+    app: fe
+spec:
+  selector:
+    app: fe
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+---
+# Source: canary_be/templates/services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  selector:
+    app: be
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+---
+# Source: canary_be/templates/database.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: tiegris/canary_db:v1
+        imagePullPolicy: Never
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: canary
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+---
+# Source: canary_be/templates/deployments-be.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-v1
+  labels:
+    app: be
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+        version: v1
+    spec:
+      containers:
+        - name: be
+          image: tiegris/canary_be:v1
+          env:
+          - name: MYSQL_HOST
+            value: mysql
+          ports:
+            - name: http
+              containerPort: 80
+      restartPolicy: Always
+---
+# Source: canary_be/templates/deployments-be.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-v2
+  labels:
+    app: be
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+        version: v2
+    spec:
+      containers:
+        - name: be
+          image: tiegris/canary_be:v2
+          env:
+          - name: MYSQL_HOST
+            value: mysql
+          ports:
+            - name: http
+              containerPort: 80
+      restartPolicy: Always
+---
+# Source: canary_be/templates/deployments-fe.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe
+  labels:
+    app: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe
+  template:
+    metadata:
+      labels:
+        app: fe
+        version: v1
+    spec:
+      containers:
+        - name: fe
+          image: tiegris/canary_fe:v1
+          ports:
+            - name: http
+              containerPort: 80
+      restartPolicy: Always
+---
+# Source: canary_be/templates/destination-rules.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: fe
+spec:
+  host: fe
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+---
+# Source: canary_be/templates/destination-rules.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: be
+spec:
+  host: be
+  subsets:
+  - name: stabile
+    labels:
+      version: v1
+  - name: canary
+    labels:
+      version: v2
+---
+# Source: canary_be/templates/ingress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+# Source: canary_be/templates/virtual-services.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: be
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=true)(;.*)?$"
+    route:
+    - destination:
+        host: be
+        subset: canary
+      weight: 100
+    - destination:
+        host: be
+        subset: stabile
+      weight: 0
+
+  - match:
+    - uri:
+        prefix: /api/nameday
+      headers:
+          cookie:
+            regex: "^(.*?;)?(canary=false)(;.*)?$"
+    route:
+    - destination:
+        host: be
+        subset: stabile
+---
+# Source: canary_be/templates/virtual-services.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: fe
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: fe
+        subset: v1
