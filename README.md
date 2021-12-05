@@ -25,6 +25,7 @@ Kapcsolodó, de nem fektetek rá hangsúlyt: AB teszt kiértékelése, mért ere
 - https://istio.io/latest/blog/2017/0.1-canary/ -> complex selectors, even regex
 - https://www.getambassador.io/docs/edge-stack/latest/topics/using/canary/ -> weighted round robin
 - https://www.mirantis.com/blog/your-app-deserves-more-than-kubernetes-ingress-kubernetes-ingress-vs-istio-gateway-webinar/
+- https://harness.io/blog/blue-green-canary-deployment-strategies/
 
 Apply all:
 
