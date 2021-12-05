@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: be
-          image: tiegris/canary_be:v1
+          image: tiegris/canary_be:{{ .Values.be.image.tag.stabile }}
           env:
           - name: MYSQL_HOST
             value: mysql
@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
         - name: be
-          image: tiegris/canary_be:v2
+          image: tiegris/canary_be:{{ .Values.be.image.tag.canary }}
           env:
           - name: MYSQL_HOST
             value: mysql

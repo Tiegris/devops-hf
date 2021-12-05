@@ -18,11 +18,11 @@ spec:
     - destination:
         host: be
         subset: canary
-      weight: 50
+      weight: {{ .Values.be.canary.routing.weights.canary }}
     - destination:
         host: be
         subset: stabile
-      weight: 50
+      weight: {{ .Values.be.canary.routing.weights.stabile }}
 
   - match:
     - uri:

@@ -1,0 +1,16 @@
+be:
+  image:
+    tag:
+      stabile: v1
+      canary: v2
+  canary:
+    routing:
+      weights:
+        stabile: 0
+        canary: 100
+
+fe:
+  image:
+    tag:
+      stabile: v1
+      canary: v2

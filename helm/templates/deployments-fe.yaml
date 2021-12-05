@@ -17,10 +17,8 @@ spec:
     spec:
       containers:
         - name: fe
-          image: tiegris/canary_fe:v1
+          image: tiegris/canary_fe:{{ .Values.fe.image.tag.stabile }}
           ports:
             - name: http
               containerPort: 80
       restartPolicy: Always
-
-
