@@ -8,7 +8,10 @@ import javax.persistence.Id
 
 @Entity
 class NameDay(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Id     
+    //@GeneratedValue
+    val id: Int?,
     val date: LocalDate,
     val name: String,
 )

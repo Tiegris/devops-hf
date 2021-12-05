@@ -13,3 +13,6 @@ CREATE TABLE name_day (
     PRIMARY KEY (id),
     UNIQUE (name)
 );
+
+create table hibernate_sequence (next_val BIGINT);
+insert into hibernate_sequence (next_val) values (1);
