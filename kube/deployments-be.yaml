@@ -18,7 +18,10 @@ spec:
     spec:
       containers:
         - name: be
-          image: canary_be:v1
+          image: tiegris/canary_be:v1
+          env:
+          - name: MYSQL_HOST
+            value: mysql
           ports:
             - name: http
               containerPort: 80
@@ -44,7 +47,10 @@ spec:
     spec:
       containers:
         - name: be
-          image: canary_be:v2
+          image: tiegris/canary_be:v2
+          env:
+          - name: MYSQL_HOST
+            value: mysql
           ports:
             - name: http
               containerPort: 80

@@ -25,7 +25,8 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: canary_db:latest
+      - image: tiegris/canary_db:v1
+        imagePullPolicy: Never
         name: mysql
         env:
           # Use secret in real usage

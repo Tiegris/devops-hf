@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: fe
-          image: canary_fe:v1
+          image: tiegris/canary_fe:v1
           ports:
             - name: http
               containerPort: 80
